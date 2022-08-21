@@ -1,7 +1,11 @@
 from datetime import datetime
 from flask_wtf import Form
-from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
-from wtforms.validators import DataRequired, AnyOf, URL
+from wtforms import StringField, SelectField, RadioField, TextAreaField, SelectMultipleField, DateTimeField
+from wtforms.validators import DataRequired, AnyOf, URL, Length
+
+#----------------------------------------------------------------------------#
+# Forms.
+#----------------------------------------------------------------------------#
 
 class ShowForm(Form):
     artist_id = StringField(
@@ -15,13 +19,25 @@ class ShowForm(Form):
         validators=[DataRequired()],
         default= datetime.today()
     )
-
+    
 class VenueForm(Form):
     name = StringField(
         'name', validators=[DataRequired()]
     )
     city = StringField(
         'city', validators=[DataRequired()]
+    )
+    seeking_description = TextAreaField(
+        'seeking_description',
+        validators=[
+            Length(max=500, message='Max characters are %(max)d')
+        ]
+    )
+    seeking_talent = RadioField(
+        'seeking_talent',
+        coerce=int,
+        default=False,
+        choices=[(False,'No'),(True,'Yes')]
     )
     state = SelectField(
         'state', validators=[DataRequired()],
@@ -86,10 +102,9 @@ class VenueForm(Form):
         'phone'
     )
     image_link = StringField(
-        'image_link'
+        'image_link', validators=[DataRequired(), URL(message='Must be a valid URL')]
     )
     genres = SelectMultipleField(
-        # TODO implement enum restriction
         'genres', validators=[DataRequired()],
         choices=[
             ('Alternative', 'Alternative'),
@@ -114,19 +129,11 @@ class VenueForm(Form):
         ]
     )
     facebook_link = StringField(
-        'facebook_link', validators=[URL()]
+        'facebook_link', validators=[URL(message='Must be a valid URL')]
     )
-    website_link = StringField(
-        'website_link'
+    website = StringField(
+        'website', validators=[URL(message='Must be a valid URL')]
     )
-
-    seeking_talent = BooleanField( 'seeking_talent' )
-
-    seeking_description = StringField(
-        'seeking_description'
-    )
-
-
 
 class ArtistForm(Form):
     name = StringField(
@@ -192,11 +199,10 @@ class ArtistForm(Form):
         ]
     )
     phone = StringField(
-        # TODO implement validation logic for state
         'phone'
     )
     image_link = StringField(
-        'image_link'
+        'image_link', validators=[DataRequired(), URL(message='Must be a valid URL')]
     )
     genres = SelectMultipleField(
         'genres', validators=[DataRequired()],
@@ -221,19 +227,22 @@ class ArtistForm(Form):
             ('Soul', 'Soul'),
             ('Other', 'Other'),
         ]
-     )
+    )
     facebook_link = StringField(
-        # TODO implement enum restriction
-        'facebook_link', validators=[URL()]
-     )
-
-    website_link = StringField(
-        'website_link'
-     )
-
-    seeking_venue = BooleanField( 'seeking_venue' )
-
-    seeking_description = StringField(
-            'seeking_description'
-     )
-
+        'facebook_link', validators=[URL(message='Must be a valid URL')]
+    )
+    website = StringField(
+        'website', validators=[URL(message='Must be a valid URL')]
+    )
+    seeking_description = TextAreaField(
+        'seeking_description',
+        validators=[
+            Length(max=500, message='Max characters are %(max)d')
+        ]
+    )
+    seeking_venue = RadioField(
+        'seeking_venue',
+        coerce=int,
+        default=False,
+        choices=[(False,'No'),(True,'Yes')]
+    )

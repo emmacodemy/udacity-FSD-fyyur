@@ -4,6 +4,10 @@ package-lock.json
 
 # dependencies
 /node_modules
+/migrations
+/env
+/package-lock.json
+/__pycache__
 /.pnp
 .pnp.js
 
